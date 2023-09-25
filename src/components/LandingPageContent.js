@@ -1,7 +1,7 @@
 import React from 'react'
-import calendarpin from '../assets/images/calendarpin.jpg';
-import calendar from '../assets/images/calendar.jpg';
-import laptops from '../assets/images/laptops.jpg';
+// import calendarpin from '../assets/images/calendarpin.jpg';
+// import calendar from '../assets/images/calendar.jpg';
+// import laptops from '../assets/images/laptops.jpg';
 
 function LandingPageContent() {
     return (
