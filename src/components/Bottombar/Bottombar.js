@@ -1,5 +1,5 @@
-import React from 'react'
-import '../assets/css/Bottombar.css'
+import React from 'react';
+import '../Bottombar/Bottombar.css';
 
 function Bottombar() {
     const currentYear = new Date().getFullYear()
@@ -17,4 +17,4 @@ function Bottombar() {
     )
 }
 
-export default Bottombar
+export default Bottombar;
