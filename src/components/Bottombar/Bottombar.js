@@ -10,7 +10,7 @@ function Bottombar() {
                     <a href="/" className="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
                         CalSync
                     </a>
-                    <span className="mb-3 mb-md-0 text-body-secondary">&copy; {currentYear} Sridhar, copyrights</span>
+                    <span className="mb-3 mb-md-0 text-body-secondary">&copy; Sridhar, {currentYear}</span>
                 </div>
             </footer>
         </div>
