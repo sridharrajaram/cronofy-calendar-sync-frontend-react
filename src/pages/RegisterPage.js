@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RegisterValidation } from "../helpers/Validation";
+import axios from 'axios';
+
+const backendUrl = "http://localhost:5001"
 
 function RegisterPage() {
   const [values, setValues] = useState({
@@ -10,14 +13,23 @@ function RegisterPage() {
     password: "",
   });
   const [error, setError] = useState({});
+  const navigate = useNavigate();
 
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(RegisterValidation(values));
+    const err = RegisterValidation(values);
+    setError(err);
+    if(err.name === "" && err.email === "" && err.password === "") {
+      await axios.post(`${backendUrl}/register`,values)
+      .then(res => {
+        navigate('/login');
+      })
+      .catch(err => console.log(err.data))
+    }
   };
   return (
     <Layout>
