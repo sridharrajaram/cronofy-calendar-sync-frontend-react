@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginValidation } from "../helpers/Validation";
+import axios from 'axios';
+
+const backendUrl = "http://localhost:5001"
 
 function LoginPage() {
   const [values, setValues] = useState({
@@ -11,13 +14,27 @@ function LoginPage() {
 
   const [error, setError] = useState({});
 
+  const navigate =useNavigate();
+
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(LoginValidation(values));
+    const err = LoginValidation(values);
+    setError(err);
+    if(err.email === "" && err.password === "") {
+      await axios.post(`${backendUrl}/login`,values)
+      .then(res => {
+        if(res.data==="Success"){
+          navigate('/home');
+        } else {
+          alert("No records found")
+        }
+      })
+      .catch(err => console.log(err.data))
+    }
   };
 
   return (
