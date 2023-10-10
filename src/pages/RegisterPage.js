@@ -26,7 +26,9 @@ function RegisterPage() {
     if(err.name === "" && err.email === "" && err.password === "") {
       await axios.post(`${backendUrl}/register`,values)
       .then(res => {
-        navigate('/login');
+        if (res.data.status === "success"){
+          navigate('/login');
+        }
       })
       .catch(err => console.log(err.data))
     }

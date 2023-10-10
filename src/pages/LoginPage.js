@@ -27,7 +27,7 @@ function LoginPage() {
     if(err.email === "" && err.password === "") {
       await axios.post(`${backendUrl}/login`,values)
       .then(res => {
-        if(res.data==="Success"){
+        if(res.data.status==="Success"){
           navigate('/home');
         } else {
           alert("No records found")
