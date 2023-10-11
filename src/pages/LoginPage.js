@@ -15,6 +15,7 @@ function LoginPage() {
   const [error, setError] = useState({});
 
   const navigate =useNavigate();
+  axios.defaults.withCredentials=true;
 
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: [e.target.value] }));
