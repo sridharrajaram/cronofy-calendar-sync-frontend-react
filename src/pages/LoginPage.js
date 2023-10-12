@@ -7,13 +7,13 @@ import axios from 'axios';
 const backendUrl = "http://localhost:5001"
 
 function LoginPage() {
+  
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState({});
-
   const navigate =useNavigate();
   axios.defaults.withCredentials=true;
 
