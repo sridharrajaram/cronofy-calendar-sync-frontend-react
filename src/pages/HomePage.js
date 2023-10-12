@@ -5,11 +5,11 @@ import axios from 'axios';
 
 const backendUrl = "http://localhost:5001"
 
-
 function HomePage() {
   const [auth, setAuth]=useState(false);
   const [name, setName]=useState('')
   axios.defaults.withCredentials=true;
+
   const getUserVerified = async () => {
     try {
       await axios.get(`${backendUrl}`)
