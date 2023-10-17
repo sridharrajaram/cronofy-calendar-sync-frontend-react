@@ -7,10 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const backendUrl = "http://localhost:5001"
 
-const cronofyClientId = 'JjMr0DO7uRL31jVr9M0FS6szZeSXTnbQ'; // Replace with your Cronofy Client ID
-const cronofyRedirectUri = 'http://localhost:3000/'; // Replace with your OAuth redirect URI
-const cronofyOauthUrl = 'https://app.cronofy.com/oauth/authorize';
-const cronofyScope = 'read_events create_event delete_event'
+const cronofyClientId = process.env.REACT_APP_DEV_CRONOFY_CLIENT_ID; // Replace with your Cronofy Client ID
+const cronofyRedirectUri = process.env.REACT_APP_DEV_REDIRECT_URI; // Replace with your OAuth redirect URI
+const cronofyOauthUrl = process.env.REACT_APP_DEV_CRONOFY_OAUTH_URL;
+const cronofyScope = process.env.REACT_APP_DEV_CRONOFY_SCOPE;
+const cronofyState = process.env.REACT_APP_DEV_CRONOFY_STATE;
 
 function HomePage() {
   axios.defaults.withCredentials = true;
@@ -19,20 +20,15 @@ function HomePage() {
   const [emailList, setEmailList] = useState([]);
   const [emailInput, setEmailInput] = useState('');
 
-
   const handleInputChange = (event) => {
     setEmailInput(event.target.value);
   };
 
-
   const initiateCronofyOAuth = async () => {
     try {
       // Define the OAuth authorization URL
-      const authorizationUrl = `${cronofyOauthUrl}?client_id=${cronofyClientId}&redirect_uri=${cronofyRedirectUri}&scope=${cronofyScope}&response_type=code`;
-
-      // You may include additional parameters such as scope, state, and others as needed
-      // For example: &scope=read_events&state=your_state_parameter
-
+      const authorizationUrl = `${cronofyOauthUrl}?client_id=${cronofyClientId}&redirect_uri=${cronofyRedirectUri}&scope=${cronofyScope}&response_type=code&state=${cronofyState}`;
+      
       // Return the authorization URL to use in the redirection
       return {
         authorizationUrl,
@@ -40,7 +36,7 @@ function HomePage() {
     } catch (error) {
       throw new Error('Failed to initiate Cronofy OAuth');
     }
-  };
+  };  
 
   const handleAddEmail = async (e) => {
     e.preventDefault()
