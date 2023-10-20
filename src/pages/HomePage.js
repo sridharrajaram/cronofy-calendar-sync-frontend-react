@@ -36,7 +36,36 @@ function HomePage() {
     } catch (error) {
       throw new Error('Failed to initiate Cronofy OAuth');
     }
-  };  
+  };
+
+  const handleCronofyCallback = async () => {
+    // Extract the authorization code and state from the URL (e.g., using URLSearchParams)
+    const searchParams = new URLSearchParams(window.location.search);
+    const receivedCode = searchParams.get('code');
+    const receivedState = searchParams.get('state');
+  
+    // Validate the received state against the stored state parameter
+    if (receivedState !== cronofyState) {
+      showErrorToast('Invalid state parameter. Possible CSRF attack.');
+      return;
+    }
+  
+    // Make a POST request to your backend to exchange the code for tokens
+    try {
+      const response = await axios.post(`${backendUrl}/redeemcode`, { code: receivedCode });
+      if (response.data.status === 'Success') {
+        // Tokens are successfully saved in your backend
+        // You can set a flag in the state or take any other action
+        toast.success('Tokens are successfully saved in your DB',{
+          position: toast.POSITION.TOP_RIGHT
+        })
+      } else {
+        showErrorToast('Failed to exchange Cronofy code for tokens.');
+      }
+    } catch (error) {
+      showErrorToast('Failed to exchange Cronofy code for tokens.');
+    }
+  };
 
   const handleAddEmail = async (e) => {
     e.preventDefault()
@@ -101,6 +130,9 @@ function HomePage() {
 
   useEffect(() => {
     getUserVerified()
+    if (window.location.search.includes('code')) {
+      handleCronofyCallback();
+    }
   }, [])
 
   return (
