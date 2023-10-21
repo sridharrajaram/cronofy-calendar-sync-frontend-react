@@ -24,11 +24,11 @@ function HomePage() {
     setEmailInput(event.target.value);
   };
 
-  const initiateCronofyOAuth = async () => {
+  const initiateCronofyOAuth = () => {
     try {
       // Define the OAuth authorization URL
       const authorizationUrl = `${cronofyOauthUrl}?client_id=${cronofyClientId}&redirect_uri=${cronofyRedirectUri}&scope=${cronofyScope}&response_type=code&state=${cronofyState}`;
-      
+
       // Return the authorization URL to use in the redirection
       return {
         authorizationUrl,
@@ -43,27 +43,28 @@ function HomePage() {
     const searchParams = new URLSearchParams(window.location.search);
     const receivedCode = searchParams.get('code');
     const receivedState = searchParams.get('state');
-  
+
     // Validate the received state against the stored state parameter
     if (receivedState !== cronofyState) {
       showErrorToast('Invalid state parameter. Possible CSRF attack.');
       return;
     }
-  
-    // Make a POST request to your backend to exchange the code for tokens
-    try {
-      const response = await axios.post(`${backendUrl}/redeemcode`, { code: receivedCode });
-      if (response.data.status === 'Success') {
-        // Tokens are successfully saved in your backend
-        // You can set a flag in the state or take any other action
-        toast.success('Tokens are successfully saved in your DB',{
-          position: toast.POSITION.TOP_RIGHT
-        })
-      } else {
+    if (receivedCode){
+      // Make a POST request to your backend to exchange the code for tokens
+      try {
+        const response = await axios.post(`${backendUrl}/redeemcode`, { code: receivedCode });
+        if (response.data.status === 'Success') {
+          // Tokens are successfully saved in your backend
+          // You can set a flag in the state or take any other action
+          toast.success('Tokens are successfully saved in your DB', {
+            position: toast.POSITION.TOP_RIGHT
+          })
+        } else {
+          showErrorToast('Failed to exchange Cronofy code for tokens.');
+        }
+      } catch (error) {
         showErrorToast('Failed to exchange Cronofy code for tokens.');
       }
-    } catch (error) {
-      showErrorToast('Failed to exchange Cronofy code for tokens.');
     }
   };
 
@@ -88,7 +89,6 @@ function HomePage() {
         } catch (error) {
           showErrorToast('Failed to initiate Cronofy OAuth.');
         }
-
 
       } else {
         showErrorToast('This email address is already added in your list');
@@ -130,10 +130,16 @@ function HomePage() {
 
   useEffect(() => {
     getUserVerified()
+  }, [])
+
+  useEffect(() => {
+    // Check if the URL contains 'code' (after Cronofy redirects)
     if (window.location.search.includes('code')) {
+      // debugger
+      // Execute the callback to exchange the code for tokens
       handleCronofyCallback();
     }
-  }, [])
+  }, []);
 
   return (
     auth ?
@@ -144,7 +150,7 @@ function HomePage() {
             <div className="card mb-3" style={{ maxWidth: "30rem" }}>
               <div className="card-body">
                 <form>
-                  <label for="emailInput"> <strong>Add Email Address:</strong><br />
+                  <label htmlFor="emailInput"> <strong>Add Email Address:</strong><br />
                     <input type="email" id="emailInput" value={emailInput} placeholder='janedoe@gmail.com' onChange={handleInputChange} />
                   </label> &nbsp;
                   <button onClick={handleAddEmail}><i className="fas fa-plus"></i></button>
