@@ -135,7 +135,6 @@ function HomePage() {
   useEffect(() => {
     // Check if the URL contains 'code' (after Cronofy redirects)
     if (window.location.search.includes('code')) {
-      // debugger
       // Execute the callback to exchange the code for tokens
       handleCronofyCallback();
     }
