@@ -24,6 +24,19 @@ function HomePage() {
     setEmailInput(event.target.value);
   };
 
+  const getEmailList = async () => {
+    const emailResponse = await axios.get(`${backendUrl}/getUserEmail`);
+    if (emailResponse.status === 200) {
+      // Email added successfully
+      console.log(emailResponse.data);
+      const updatedEmailList = emailResponse.data;
+      setEmailList(updatedEmailList);
+      setEmailInput('');
+    } else {
+      showErrorToast('Failed to add the email.');
+    }
+  }
+
   const initiateCronofyOAuth = () => {
     try {
       // Define the OAuth authorization URL
@@ -49,7 +62,7 @@ function HomePage() {
       showErrorToast('Invalid state parameter. Possible CSRF attack.');
       return;
     }
-    if (receivedCode){
+    if (receivedCode) {
       // Make a POST request to your backend to exchange the code for tokens
       try {
         const response = await axios.post(`${backendUrl}/redeemcode`, { code: receivedCode });
@@ -76,19 +89,39 @@ function HomePage() {
     if (emailInput.trim() !== '' && emailRegex.test(emailInput)) {
       // Check if the email already exists in the list
       if (!emailList.includes(emailInput)) {
-        setEmailList([...emailList, emailInput]);
-        setEmailInput('');
+        // try{
+        //   const emailResponse = await axios.post(`${backendUrl}/addUserEmail`, { emailAddress: emailInput });
+        //   console.log(emailInput)
+        //     if (emailResponse.status === 200) {
+        //       // Email added successfully
+        //       const updatedEmailList = emailResponse.data;
+        //       setEmailList(updatedEmailList);
+        //       setEmailInput('');
+        //     } else {
+        //       showErrorToast('Failed to add the email.');
+        //     }
+        // } catch (error){
+        //   showErrorToast('Failed to add the email.')
+        // }
 
         // Redirect to Cronofy OAuth flow
         try {
-          const response = await initiateCronofyOAuth();
-          // You should handle the OAuth redirection and callback here
-          // The response should contain the authorization URL from Cronofy
-          // Redirect the user to the Cronofy authorization URL
-          window.location.href = response.authorizationUrl;
+          const emailResponse = await axios.post(`${backendUrl}/addUserEmail`, { emailAddress: emailInput });
+          if (emailResponse.status === 200) {
+            setEmailInput('');
+            const response = initiateCronofyOAuth();
+            // You should handle the OAuth redirection and callback here
+            // The response should contain the authorization URL from Cronofy
+            // Redirect the user to the Cronofy authorization URL
+            window.location.href = response.authorizationUrl;
+          }
+          else {
+            showErrorToast('Failed to add the email.');
+          }
         } catch (error) {
           showErrorToast('Failed to initiate Cronofy OAuth.');
         }
+
 
       } else {
         showErrorToast('This email address is already added in your list');
@@ -120,9 +153,6 @@ function HomePage() {
             setAuth(false)
           }
         })
-        .then(err => {
-          console.log(err)
-        });
     } catch (error) {
       console.log(error);
     }
@@ -133,6 +163,7 @@ function HomePage() {
   }, [])
 
   useEffect(() => {
+    getEmailList();
     // Check if the URL contains 'code' (after Cronofy redirects)
     if (window.location.search.includes('code')) {
       // Execute the callback to exchange the code for tokens
