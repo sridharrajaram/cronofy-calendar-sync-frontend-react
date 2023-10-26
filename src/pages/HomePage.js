@@ -4,6 +4,7 @@ import LandingPage from './LandingPage';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = "http://localhost:5001"
 
@@ -19,6 +20,7 @@ function HomePage() {
   const [name, setName] = useState('')
   const [emailList, setEmailList] = useState([]);
   const [emailInput, setEmailInput] = useState('');
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setEmailInput(event.target.value);
@@ -72,6 +74,7 @@ function HomePage() {
           toast.success('Tokens are successfully saved in your DB', {
             position: toast.POSITION.TOP_RIGHT
           })
+          navigate('/home');  
         } else {
           showErrorToast('Failed to exchange Cronofy code for tokens.');
         }
