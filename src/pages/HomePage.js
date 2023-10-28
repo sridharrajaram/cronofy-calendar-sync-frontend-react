@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 const backendUrl = "http://localhost:5001"
 
-const cronofyClientId = process.env.REACT_APP_DEV_CRONOFY_CLIENT_ID; // Replace with your Cronofy Client ID
-const cronofyRedirectUri = process.env.REACT_APP_DEV_REDIRECT_URI; // Replace with your OAuth redirect URI
+const cronofyClientId = process.env.REACT_APP_DEV_CRONOFY_CLIENT_ID;
+const cronofyRedirectUri = process.env.REACT_APP_DEV_REDIRECT_URI;
 const cronofyOauthUrl = process.env.REACT_APP_DEV_CRONOFY_OAUTH_URL;
 const cronofyScope = process.env.REACT_APP_DEV_CRONOFY_SCOPE;
 const cronofyState = process.env.REACT_APP_DEV_CRONOFY_STATE;
@@ -29,8 +29,6 @@ function HomePage() {
   const getEmailList = async () => {
     const emailResponse = await axios.get(`${backendUrl}/getUserEmail`);
     if (emailResponse.status === 200) {
-      // Email added successfully
-      console.log(emailResponse.data);
       const updatedEmailList = emailResponse.data;
       setEmailList(updatedEmailList);
       setEmailInput('');
@@ -69,8 +67,6 @@ function HomePage() {
       try {
         const response = await axios.post(`${backendUrl}/redeemcode`, { code: receivedCode });
         if (response.data.status === 'Success') {
-          // Tokens are successfully saved in your backend
-          // You can set a flag in the state or take any other action
           toast.success('Tokens are successfully saved in your DB', {
             position: toast.POSITION.TOP_RIGHT
           })
@@ -92,20 +88,6 @@ function HomePage() {
     if (emailInput.trim() !== '' && emailRegex.test(emailInput)) {
       // Check if the email already exists in the list
       if (!emailList.includes(emailInput)) {
-        // try{
-        //   const emailResponse = await axios.post(`${backendUrl}/addUserEmail`, { emailAddress: emailInput });
-        //   console.log(emailInput)
-        //     if (emailResponse.status === 200) {
-        //       // Email added successfully
-        //       const updatedEmailList = emailResponse.data;
-        //       setEmailList(updatedEmailList);
-        //       setEmailInput('');
-        //     } else {
-        //       showErrorToast('Failed to add the email.');
-        //     }
-        // } catch (error){
-        //   showErrorToast('Failed to add the email.')
-        // }
 
         // Redirect to Cronofy OAuth flow
         try {
@@ -113,7 +95,6 @@ function HomePage() {
           if (emailResponse.status === 200) {
             setEmailInput('');
             const response = initiateCronofyOAuth();
-            // You should handle the OAuth redirection and callback here
             // The response should contain the authorization URL from Cronofy
             // Redirect the user to the Cronofy authorization URL
             window.location.href = response.authorizationUrl;
@@ -124,8 +105,6 @@ function HomePage() {
         } catch (error) {
           showErrorToast('Failed to initiate Cronofy OAuth.');
         }
-
-
       } else {
         showErrorToast('This email address is already added in your list');
       }
