@@ -170,7 +170,7 @@ function HomePage() {
               </div>
               <div className="card-footer bg-transparent border-success">
                 <h5>
-                  List of Email Address Synced:
+                  List of Email Address Added:
                 </h5>
                 <ol className="list-group">
                   {emailList.map((email, index) => (
