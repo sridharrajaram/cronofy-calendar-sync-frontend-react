@@ -113,8 +113,23 @@ function HomePage() {
     }
   };
 
-  const handleRemoveEmail = (indexToRemove) => {
-    setEmailList(emailList.filter((_, index) => index !== indexToRemove));
+  const handleRemoveEmail = (emailToRemove) => {
+    axios
+      .put('/removeUserEmail', { emailAddress: emailToRemove })
+      .then((response) => {
+        if (response.data.status === 'Success') {
+          // Email removal was successful, update the frontend accordingly
+          setEmailList(emailList.filter((email) => email !== emailToRemove));
+        } else {
+          // Handle the error if the removal was not successful
+          console.error('Error removing email:', response.data.Error);
+          showErrorToast(response.data.Error);
+        }
+      })
+      .catch((error) => {
+        // Handle network or other errors
+        console.error('Error removing email:', error);
+      });
   };
 
   const showErrorToast = (message) => {
@@ -151,6 +166,7 @@ function HomePage() {
       // Execute the callback to exchange the code for tokens
       handleCronofyCallback();
     }
+  // eslint-disable-next-line  
   }, []);
 
   return (
@@ -176,7 +192,7 @@ function HomePage() {
                   {emailList.map((email, index) => (
                     <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                       {email}
-                      <span style={{ color: "red" }} onClick={() => handleRemoveEmail(index)}>
+                      <span style={{ color: "red" }} onClick={() => handleRemoveEmail(email)}>
                         X
                       </span>
                     </li>
