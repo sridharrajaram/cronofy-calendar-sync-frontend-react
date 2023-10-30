@@ -115,7 +115,7 @@ function HomePage() {
 
   const handleRemoveEmail = (emailToRemove) => {
     axios
-      .put('/removeUserEmail', { emailAddress: emailToRemove })
+      .put(`${backendUrl}/removeUserEmail`, { emailAddress: emailToRemove })
       .then((response) => {
         if (response.data.status === 'Success') {
           // Email removal was successful, update the frontend accordingly
@@ -192,7 +192,7 @@ function HomePage() {
                   {emailList.map((email, index) => (
                     <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                       {email}
-                      <span style={{ color: "red" }} onClick={() => handleRemoveEmail(email)}>
+                      <span style={{ color: "red",cursor:"pointer"}} onClick={() => handleRemoveEmail(email)}>
                         X
                       </span>
                     </li>
