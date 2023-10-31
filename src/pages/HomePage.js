@@ -115,11 +115,12 @@ function HomePage() {
 
   const handleRemoveEmail = (emailToRemove) => {
     axios
-      .put(`${backendUrl}/removeUserEmail`, { emailAddress: emailToRemove })
+      .post(`${backendUrl}/removeUserEmail`, { emailAddress: emailToRemove })
       .then((response) => {
         if (response.data.status === 'Success') {
           // Email removal was successful, update the frontend accordingly
           setEmailList(emailList.filter((email) => email !== emailToRemove));
+          toast.success('Calendar sync revoked successful')
         } else {
           // Handle the error if the removal was not successful
           console.error('Error removing email:', response.data.Error);
