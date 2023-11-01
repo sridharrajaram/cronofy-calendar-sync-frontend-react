@@ -30,6 +30,9 @@ function HomePage() {
     const emailResponse = await axios.get(`${backendUrl}/getUserEmail`);
     if (emailResponse.status === 200) {
       const updatedEmailList = emailResponse.data;
+      toast.success('calendar services connected', {
+        position: toast.POSITION.TOP_RIGHT
+      })
       setEmailList(updatedEmailList);
       setEmailInput('');
     } else {
@@ -70,7 +73,7 @@ function HomePage() {
           toast.success('Tokens are successfully saved in your DB', {
             position: toast.POSITION.TOP_RIGHT
           })
-          navigate('/home');  
+          navigate('/home');
         } else {
           showErrorToast('Failed to exchange Cronofy code for tokens.');
         }
@@ -120,7 +123,7 @@ function HomePage() {
         if (response.data.status === 'Success') {
           // Email removal was successful, update the frontend accordingly
           setEmailList(emailList.filter((email) => email !== emailToRemove));
-          toast.success('Calendar sync revoked successful')
+          toast.success('Calendar sync revoked successful');
         } else {
           // Handle the error if the removal was not successful
           console.error('Error removing email:', response.data.Error);
@@ -167,7 +170,7 @@ function HomePage() {
       // Execute the callback to exchange the code for tokens
       handleCronofyCallback();
     }
-  // eslint-disable-next-line  
+    // eslint-disable-next-line  
   }, []);
 
   return (
@@ -193,7 +196,7 @@ function HomePage() {
                   {emailList.map((email, index) => (
                     <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                       {email}
-                      <span style={{ color: "red",cursor:"pointer"}} onClick={() => handleRemoveEmail(email)}>
+                      <span style={{ color: "red", cursor: "pointer" }} onClick={() => handleRemoveEmail(email)}>
                         X
                       </span>
                     </li>
