@@ -30,9 +30,6 @@ function HomePage() {
     const emailResponse = await axios.get(`${backendUrl}/getUserEmail`);
     if (emailResponse.status === 200) {
       const updatedEmailList = emailResponse.data;
-      toast.success('calendar services connected', {
-        position: toast.POSITION.TOP_RIGHT
-      })
       setEmailList(updatedEmailList);
       setEmailInput('');
     } else {
