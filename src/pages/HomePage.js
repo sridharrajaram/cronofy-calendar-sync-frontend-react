@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const backendUrl = "http://localhost:5001"
+const backendUrl = process.env.REACT_APP_DEV_SERVER_URL
 
 const cronofyClientId = process.env.REACT_APP_DEV_CRONOFY_CLIENT_ID;
 const cronofyRedirectUri = process.env.REACT_APP_DEV_REDIRECT_URI;
